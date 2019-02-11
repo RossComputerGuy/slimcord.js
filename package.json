@@ -1,0 +1,36 @@
+{
+  "name": "harobot",
+  "version": "1.0.0",
+  "description": "A simple Discord Bot core. Used for HaroBot and Lordgenome Discord Bots.",
+  "main": "index.js",
+  "scripts": {
+    "eslint": "eslint *.js",
+    "prepublishOnly": "npm run eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SpaceboyRoss01/slimcord.js.git"
+  },
+  "keywords": [
+    "discord",
+    "gundam",
+    "haro",
+    "discord-bot"
+  ],
+  "author": "Spaceboy Ross",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/SpaceboyRoss01/slimcord.js/issues"
+  },
+  "homepage": "https://github.com/SpaceboyRoss01/slimcord.js#readme",
+  "devDependencies": {
+    "eslint": "^5.13.0"
+  },
+  "dependencies": {
+    "async-dependency-graph": "^1.1.1",
+    "deepmerge": "^3.1.0",
+    "discord.js": "^11.4.2",
+    "omit-deep": "^0.3.0",
+    "yargs-parser": "^13.0.0"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "prefix": "$",
+  "embeds": {
+    "error": {
+      "title": "Error",
+      "color": "#ff0000"
+    }
+  }
+}
