@@ -1,3 +1,6 @@
+/**
+ * Contains similar code to OS.js's 'src/core.js' file.
+ */
 const merge = require('deepmerge');
 const Discord = require('discord.js');
 const EventEmitter = require('events');
