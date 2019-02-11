@@ -3,6 +3,7 @@ const Discord = require('discord.js');
 const EventEmitter = require('events');
 const omitDeep = require('omit-deep');
 const {moduleHandler, resolveTreeByKey} = require('./utils.js');
+const winston = require('winston');
 const yargsParser = require('yargs-parser');
 
 const config = Symbol('config');
@@ -42,6 +43,12 @@ class Core extends EventEmitter {
     this.booted = false;
     this.started = false;
     this.destroyed = false;
+    if (this.config('enableLogging')) {
+      this.logger = winston.createLogger({
+        ...this.config('logger'),
+        transports: this.config('logger.transports').map(t => new winston.transports[t.type](t.opts))
+      });
+    }
     // TODO: use winston to log events.
   }
   
@@ -84,6 +91,9 @@ class Core extends EventEmitter {
           }
         } else {
           this.emit('command.notHas', name, args, message);
+          if (this.config('enableLogging')) {
+            this.logger.warn(`Command '${name}' not found`);
+          }
           if (this.has('slimcord.js/embed')) {
             message.channel.send(this.make('slimcord.js/embed', {
               type: 'error',
@@ -93,6 +103,7 @@ class Core extends EventEmitter {
         }
       }
     });
+    this.emit('slimcord.js:init');
     return this.client.login(this.config('discord.token')).then(() => this[modules].init(true).then(() => this.start()));
   }
   
@@ -100,13 +111,12 @@ class Core extends EventEmitter {
     if (this.destroyed) {
       return false;
     }
-
+    this.emit('slimcord.js:destroy');
     this.booted = false;
     this.destroyed = true;
     this.started = false;
     this[modules].destroy();
     this.client.destroy();
-
     return true;
   }
   
@@ -115,6 +125,7 @@ class Core extends EventEmitter {
       return Promise.resolve(true);
     }
     this.started = true;
+    this.emit('slimcord.js:start');
     return this[modules].init(false).then(() => true);
   }
 

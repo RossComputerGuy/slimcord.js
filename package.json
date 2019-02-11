@@ -31,6 +31,7 @@
     "deepmerge": "^3.1.0",
     "discord.js": "^11.4.2",
     "omit-deep": "^0.3.0",
+    "winston": "^3.2.1",
     "yargs-parser": "^13.0.0"
   }
 }
