@@ -1,3 +1,6 @@
+/**
+ * Contains similar code to OS.js's 'src/utils.js' file.
+ */
 const { Graph, Node } = require('async-dependency-graph');
 
 const each = (list, method) => Promise.all(list.map(p => {
