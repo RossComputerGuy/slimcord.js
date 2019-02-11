@@ -1,5 +1,5 @@
 /**
- * Contains similar code to OS.js's 'src/core.js' file.
+ * Based on OS.js codebase
  * Copyright (c) 2011-2019, Anders Evenrud <andersevenrud@gmail.com>
  * See LICENSE file for more information
  */
