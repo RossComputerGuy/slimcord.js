@@ -49,3 +49,9 @@ class MyModule {
   }
 }
 ```
+
+### Adding the example module
+Before your `bot.boot()` line, add this:
+```js
+bot.register(MyModule);
+```
