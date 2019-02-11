@@ -45,7 +45,7 @@ class MyModule {
     });
   }
   destroy() {
-    delete this.core.command['hello'];
+    delete this.core.commands['hello'];
   }
 }
 ```
