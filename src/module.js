@@ -1,3 +1,7 @@
+/**
+ * slimcord.js - A simple Discord Bot framework
+ * Copyright (c) Tristan Ross
+ */
 class Module {
   constructor(core, options={}) {
     this.core = core;
