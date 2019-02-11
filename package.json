@@ -1,7 +1,7 @@
 {
   "name": "harobot",
   "version": "1.0.0",
-  "description": "A simple Discord Bot core. Used for HaroBot and Lordgenome Discord Bots.",
+  "description": "A simple Discord Bot framework. Used for HaroBot and Lordgenome Discord Bots.",
   "main": "index.js",
   "scripts": {
     "eslint": "eslint *.js",
