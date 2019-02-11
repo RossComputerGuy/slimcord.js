@@ -26,7 +26,7 @@ class MyModule {
     return {
       name: 'My Module',
       desc: 'Hello, world.',
-      author: 'Spaceboy Ross',
+      author: 'Me',
       ver: '0.1.0',
       url: 'https://example.com',
       provides: [
