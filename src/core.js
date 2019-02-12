@@ -53,11 +53,11 @@ class Core extends EventEmitter {
     this.destroyed = false;
     if (this.config('enableLogging')) {
       this.logger = winston.createLogger({
-        ...this.config('logger'),
-        transports: this.config('logger.transports').map(t => new winston.transports[t.type](t.opts))
+        ...this.config('logger', {}),
+        format: winston.format[this.config('logger.format', 'json')](),
+        transports: this.config('logger.transports', [{type: 'Console'}]).map(t => new winston.transports[t.type](t.opts))
       });
     }
-    // TODO: use winston to log events.
   }
   
   config(key, defaultValue) {
@@ -100,7 +100,9 @@ class Core extends EventEmitter {
               message.channel.send(this.make('slimcord.js/embed', {
                 type: 'error',
                 message: `Command '${name}' ran into an error!\n${ex.stack}`
-              }));
+              })).catch(err => {
+                if (this.core.config('enableLogging')) this.logger.error(err);
+              });
             }
           }
         } else {
@@ -112,18 +114,31 @@ class Core extends EventEmitter {
             message.channel.send(this.make('slimcord.js/embed', {
               type: 'error',
               message: `Command '${name}' not found`
-            }));
+            })).catch(err => {
+              if (this.config('enableLogging')) this.logger.error(err);
+            });
           }
         }
       }
     });
     this.emit('slimcord.js:init');
-    return this.client.login(this.config('discord.token')).then(() => this[modules].init(true).then(() => this.start()));
+    if (this.config('enableLogging')) {
+      this.logger.info(`Logging in...`);
+    }
+    return this.client.login(this.config('discord.token')).then(() => {
+      if (this.config('enableLogging')) {
+        this.logger.info(`Running init before stage`);
+      }
+      return this[modules].init(true).then(() => this.start());
+    });
   }
   
   destroy() {
     if (this.destroyed) {
       return false;
+    }
+    if (this.config('enableLogging')) {
+      this.logger.info(`Destroying and shutting down`);
     }
     this.emit('slimcord.js:destroy');
     this.booted = false;
@@ -140,6 +155,9 @@ class Core extends EventEmitter {
     }
     this.started = true;
     this.emit('slimcord.js:start');
+    if (this.config('enableLogging')) {
+      this.logger.info(`Running init after stage`);
+    }
     return this[modules].init(false).then(() => true);
   }
 

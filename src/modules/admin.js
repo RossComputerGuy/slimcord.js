@@ -34,12 +34,22 @@ class AdminModule {
         readStorage('adminRole').then(adminRole => {
           if (message.member.roles.find('name', adminRole)) {
             const member = guild.members.find('name', args['_'][0]) || message.mentions.members.array()[0];
-            if (!member) return message.reply('Error: user not found!');
+            if (!member) return message.reply('Error: user not found!').catch(err => {
+              if (this.core.config('enableLogging')) this.core.logger.error(err);
+            });
             member.setMute(args['toggle'] == 'true' ? !message.member.mute : args['value'] == 'true', args['reason']).then(() => {
-              message.reply('Muted user');
-            }).catch(err => message.reply(err.stack));
-          } else message.reply('You do not have permission to use this command!');
-        }).catch(err => message.reply(err.stack));
+              message.reply('Muted user').catch(err => {
+                if (this.core.config('enableLogging')) this.core.logger.error(err);
+              });
+            }).catch(err => message.reply(err.stack).catch(err => {
+              if (this.core.config('enableLogging')) this.core.logger.error(err);
+            }));
+          } else message.reply('You do not have permission to use this command!').catch(err => {
+            if (this.core.config('enableLogging')) this.core.logger.error(err);
+          });
+        }).catch(err => message.reply(err.stack).catch(err => {
+          if (this.core.config('enableLogging')) this.core.logger.error(err);
+        }));
       }
     });
   }
