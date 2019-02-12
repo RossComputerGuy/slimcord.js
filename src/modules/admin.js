@@ -22,7 +22,23 @@ class AdminModule {
       description: 'Mutes a user',
       usage: 'mute <mention>',
       run: (args, message, channel, guild) => {
-        message.reply('Command not implemented.');
+        if (args['_'].length > 1) return message.reply('Error: Too many arguments');
+        if (typeof args['toggle'] != 'string') args['toggle'] = 'true';
+        if (typeof args['value'] != 'string') args['value'] = 'true';
+        if (typeof args['reason'] != 'string') args['reason'] = 'Unknown reason';
+        let readStorage = (path) => Promise.resolve(this.core.config('storage.' + path));
+        if (this.core.config('storageProvider') && this.core.has(this.core.config('storageProvider'))) {
+          readStorage = this.core.make(this.core.config('storageProvider')).readStorage;
+        }
+        readStorage('adminRole').then(adminRole => {
+          if (message.member.roles.find('name', adminRole)) {
+            const member = guild.members.find('name', args['_'][0]) || message.mentions.members.array()[0];
+            if (!member) return message.reply('Error: user not found!');
+            member.setMute(args['toggle'] == 'true' ? !message.member.mute : args['value'] == 'true', args['reason']).then(() => {
+              message.reply('Muted user');
+            }).catch(err => message.reply(err.stack));
+          } else message.reply('You do not have permission to use this command!');
+        }).catch(err => message.reply(err.stack));
       }
     });
   }
