@@ -1,4 +1,3 @@
-const Discord = require('discord.js'):
 const Module = require('../module.js');
 
 class Guild {

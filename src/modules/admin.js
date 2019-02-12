@@ -15,7 +15,8 @@ class AdminModule {
       provides: []
     };
   }
-  async init() {
+  init() {
+    return Promise.resolve();
   }
   start() {
     this.core.registerCommand('mute', {
