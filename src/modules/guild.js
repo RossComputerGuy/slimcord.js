@@ -23,8 +23,8 @@ class GuildModule extends Module {
   }
   async init() {
     this.core.singleton('slimbot.js/guilds', () => ({
-      findByKey: (key, value) => new Guild(this.core, this.core.client.guilds.find(key, value)),
-      getGuilds: () => this.core.client.guilds.array().map(guild => new Guild(this.core, guild))
+      findBy: (key, value) => new Guild(this.core, this.core.client.guilds.find(key, value)),
+      get: () => this.core.client.guilds.array().map(guild => new Guild(this.core, guild))
     }));
   }
   start() {
