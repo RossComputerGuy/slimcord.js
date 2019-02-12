@@ -1,6 +1,6 @@
 {
   "name": "slimcord.js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple Discord Bot framework. Used for HaroBot and Lordgenome Discord Bots.",
   "main": "index.js",
   "scripts": {

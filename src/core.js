@@ -91,11 +91,17 @@ class Core extends EventEmitter {
         let args = yargsParser(message.content);
         let name = args['_'].shift().replace(this.config('prefix'), '');
         if (this.commands[name]) {
-          this.emit('command.run', name, args, message);
+          this.emit('command.run', name, args, message, message.guild);
           try {
-            this.commands[name].run(args, message, message.channel);
+            this.commands[name].run(args, message, message.channel, message.guild);
           } catch(ex) {
             this.emit('error', ex);
+            if (this.has('slimcord.js/embed')) {
+              message.channel.send(this.make('slimcord.js/embed', {
+                type: 'error',
+                message: `Command '${name}' ran into an error!\n${ex.stack}`
+              }));
+            }
           }
         } else {
           this.emit('command.notHas', name, args, message);

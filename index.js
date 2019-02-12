@@ -2,6 +2,7 @@ module.exports = {
   Core: require('./src/core.js'),
   Module: require('./src/module.js'),
   modules: {
+    AdminModule: require('./src/modules/admin.js'),
     GuildModule: require('./src/modules/guild.js')
   }
 };
