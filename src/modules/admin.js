@@ -12,10 +12,16 @@ class AdminModule {
       author: 'Spaceboy Ross',
       ver: '0.1.0',
       url: 'https://github.com/SpaceboyRoss01/slimcord.js',
-      provides: []
+      provides: [
+        'slimcord.js/admin'
+      ]
     };
   }
   init() {
+    this.core.singleton('slimcord.js/admin', () => ({
+      isUserBotOwner: (user) => this.core.config('botOwners').indexOf(user.id) > -1,
+      isUserPriviledged: (member, perms=[]) => member.hasPermissions(perms) || this.core.config('botOwners').indexOf(user.id) > -1
+    }));
     return Promise.resolve();
   }
   start() {
@@ -31,25 +37,21 @@ class AdminModule {
         if (this.core.config('storageProvider') && this.core.has(this.core.config('storageProvider'))) {
           readStorage = this.core.make(this.core.config('storageProvider')).readStorage;
         }
-        readStorage('adminRole').then(adminRole => {
-          if (message.member.roles.find('name', adminRole)) {
-            const member = guild.members.find('name', args['_'][0]) || message.mentions.members.array()[0];
-            if (!member) return message.reply('Error: user not found!').catch(err => {
-              if (this.core.config('enableLogging')) this.core.logger.error(err);
-            });
-            member.setMute(args['toggle'] == 'true' ? !message.member.mute : args['value'] == 'true', args['reason']).then(() => {
-              message.reply('Muted user').catch(err => {
-                if (this.core.config('enableLogging')) this.core.logger.error(err);
-              });
-            }).catch(err => message.reply(err.stack).catch(err => {
-              if (this.core.config('enableLogging')) this.core.logger.error(err);
-            }));
-          } else message.reply('You do not have permission to use this command!').catch(err => {
+        if (message.member.hasPermissions('MUTE_MEMBERS')) {
+          const member = guild.members.find('name', args['_'][0]) || message.mentions.members.array()[0];
+          if (!member) return message.reply('Error: user not found!').catch(err => {
             if (this.core.config('enableLogging')) this.core.logger.error(err);
           });
-        }).catch(err => message.reply(err.stack).catch(err => {
+          member.setMute(args['toggle'] == 'true' ? !message.member.mute : args['value'] == 'true', args['reason']).then(() => {
+            message.reply('Muted user').catch(err => {
+              if (this.core.config('enableLogging')) this.core.logger.error(err);
+            });
+          }).catch(err => message.reply(err.stack).catch(err => {
+            if (this.core.config('enableLogging')) this.core.logger.error(err);
+          }));
+        } else message.reply('You do not have permission to use this command!').catch(err => {
           if (this.core.config('enableLogging')) this.core.logger.error(err);
-        }));
+        });
       }
     });
   }
